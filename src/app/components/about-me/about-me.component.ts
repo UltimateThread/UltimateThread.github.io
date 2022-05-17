@@ -126,10 +126,10 @@ export class AboutMeComponent implements OnInit, AfterViewInit {
   }
 
   calculateChatWindowHeight() {
-    const chatWindow = document.getElementsByClassName('content-wrapper')[0] as HTMLElement;
+    const contentWrapper = document.getElementsByClassName('content-wrapper')[0] as HTMLElement;
     const header = document.getElementsByClassName('header')[0] as HTMLElement;
 
-    if (chatWindow === undefined || header === undefined) {
+    if (contentWrapper === undefined || header === undefined) {
       return;
     }
 
@@ -140,7 +140,7 @@ export class AboutMeComponent implements OnInit, AfterViewInit {
     this.canvas.style.height = `${chatWindowHeight}px`;
     this.canvas.width = width;
 
-    chatWindow.style.height = `${chatWindowHeight}px`;
-    chatWindow.style.width = `${width}px`;
+    contentWrapper.style.height = `${chatWindowHeight}px`;
+    contentWrapper.style.width = `${width}px`;
   }
 }

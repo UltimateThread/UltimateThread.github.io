@@ -1,18 +1,21 @@
 <div class="home-wrapper">
     <app-header></app-header>
-    <div class="intro-wrapper">
-        <div class="spacer-max-width-300"></div>
-        <img class="a-logo" src="/assets/aaron-logo.png" />
-        <div class="intro-text-wrapper">
-            <div class="intro-name">Aaron Brasington</div>
-            <div class="intro-description">Full Stack Software Engineer</div>
+    <div class="content-wrapper">
+        <div class="intro-wrapper">
+            <div class="spacer-max-width-300"></div>
+            <img class="a-logo" src="/assets/aaron-logo.png" />
+            <div class="intro-text-wrapper">
+                <div class="intro-name">Aaron Brasington</div>
+                <div class="intro-description">Full Stack Software Engineer</div>
+            </div>
+            <div class="spacer"></div>
+            <div class="social-media-icons">
+                <a href="https://github.com/UltimateThread" target="_blank"><img class="social-media-icon"
+                        src="/assets/github-logo.png" /></a>
+                <a href="https://www.linkedin.com/in/aaron-brasington-839028a8/" target="_blank"><img
+                        class="social-media-icon" src="/assets/linkedin-logo.png" /></a>
+            </div>
         </div>
-        <div class="spacer"></div>
-        <div class="social-media-icons">
-            <a href="https://github.com/UltimateThread" target="_blank"><img class="social-media-icon" src="/assets/github-logo.png" /></a>
-            <a href="https://www.linkedin.com/in/aaron-brasington-839028a8/" target="_blank"><img class="social-media-icon" src="/assets/linkedin-logo.png" /></a>
-        </div>
+        <canvas #canvas id="canvas" style="position:absolute; z-index: -1000;"></canvas>
     </div>
-    <canvas #canvas id="canvas" style="position:absolute; height:100%; width:100%; z-index: -1000;"></canvas>
 </div>
-

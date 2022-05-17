@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import * as THREE from 'three';
 import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
@@ -15,7 +15,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private camera!: THREE.PerspectiveCamera;
 
   private get canvas(): HTMLCanvasElement {
-    return this.canvasRef.nativeElement;
+    if( !!this.canvasRef) {
+      return this.canvasRef.nativeElement;
+    } else {
+      return undefined;
+    }
   }
 
   private renderer!: THREE.WebGL1Renderer;
@@ -31,10 +35,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   constructor(private router: Router) { }
 
+  @HostListener('window:orientationchange ', ['$event'])
+  onOrientationChange() {
+    this.calculateChatWindowHeight();
+  }
+
   ngOnInit(): void {
+    setTimeout(function() { window.dispatchEvent(new Event('resize')); }, 10);
   }
 
   ngAfterViewInit(): void {
+    this.calculateChatWindowHeight();
+
     this.createScene();
     this.startRenderingLoop();
   }
@@ -81,8 +93,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.controls.lookSpeed = 0.1;
 
     window.addEventListener('resize', (e) => {
-      this.canvas.width = window.innerWidth;
-      this.canvas.height = window.innerHeight;
+      this.calculateChatWindowHeight();
+
       this.camera.aspect = this.canvas.width / this.canvas.height;
       this.camera.updateProjectionMatrix();
   
@@ -93,7 +105,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private startRenderingLoop() {
-
+    this.calculateChatWindowHeight();
     let component: HomeComponent = this;
     (function render() {
       requestAnimationFrame(render);
@@ -118,5 +130,24 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     this.controls.update(delta);
     this.renderer.render(this.scene, this.camera);
+  }
+
+  calculateChatWindowHeight() {
+    const contentWrapper = document.getElementsByClassName('content-wrapper')[0] as HTMLElement;
+    const header = document.getElementsByClassName('header')[0] as HTMLElement;
+
+    if (contentWrapper === undefined || header === undefined || this.canvas === undefined) {
+      return;
+    }
+
+    const chatWindowHeight = innerHeight - header.offsetHeight;
+    const width = window.innerWidth;
+
+    this.canvas.height = chatWindowHeight;
+    this.canvas.style.height = `${chatWindowHeight}px`;
+    this.canvas.width = width;
+
+    contentWrapper.style.height = `${chatWindowHeight}px`;
+    contentWrapper.style.width = `${width}px`;
   }
 }
