@@ -1,0 +1,145 @@
+.about-me-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+
+.project-section {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    flex-grow: 1;
+    padding-bottom: 50px;
+    padding-top: 50px;
+    border-bottom: 2px solid white;
+}
+
+.project-section2 {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    flex-grow: 1;
+    padding-bottom: 50px;
+    padding-top: 50px;
+    border-bottom: 2px solid white;
+    background-color: rgba(46, 42, 42, 0.75);
+}
+
+.project-section-img {
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-section-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.angular-chat-img {
+    max-width: 450px;
+    height: 250px;
+    margin-left: 15px;
+}
+
+.dotnet-web-api-img {
+    width: 450px;
+    height: 250px;
+    margin-right: 15px;
+}
+
+.pictures-videos-microservice-img {
+    width: 350px;
+    height: 350px;
+    margin-right: 15px;
+}
+
+.microservice-management-img {
+    width: 450px;
+    height: 125px;
+    margin-left: 15px;
+}
+
+.point-of-interest-map-img {
+    width: 350px;
+    height: 350px;
+    margin-right: 15px;
+}
+
+.image-classification-img {
+    width: 400px;
+    height: 350px;
+    margin-left: 15px;
+}
+
+.website-design-development-img {
+    width: 450px;
+    height: 350px;
+    margin-left: 15px;
+}
+
+.ecommerce-img {
+    width: 500px;
+    height: 250px;
+    margin-right: 15px;
+}
+
+.spacer {
+    flex-grow: 1;
+}
+
+.project-section-header {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 30px;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+.project-section-content {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 25px;
+    color: white;
+    padding-left: 35px;
+    padding-right: 35px;
+}
+
+@media screen and (max-width: 900px) {
+    .project-section {
+        flex-direction: column;
+    }
+
+    .project-section2 {
+        flex-direction: column;
+    }
+
+    .project-section-img {
+        width: 100%;
+    }
+}
+
+@media screen and (min-width: 1400px) {
+    .project-section {
+        justify-content: center;
+    }
+
+    .project-section2 {
+        justify-content: center;
+    }
+
+    .spacer {
+        max-width: 400px;
+    }
+}

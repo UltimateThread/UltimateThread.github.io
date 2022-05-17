@@ -1,0 +1,90 @@
+.home-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.spacer {
+    flex-grow: 1;
+}
+
+.spacer-max-width-300 {
+    flex-grow: 1;
+    max-width: 100px;
+}
+
+.a-logo {
+    height: 60vh;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.intro-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.intro-name {
+    font-size: 80px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: white;
+}
+
+.intro-text-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-left: -200px;
+    justify-content: center;
+}
+
+.intro-description {
+    font-size: 40px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: white;
+}
+
+.social-media-icons {
+    width: 100px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.social-media-icon {
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+}
+
+.social-media-icon:hover {
+    cursor: pointer;
+}
+
+@media screen and (max-width: 900px) {
+    .intro-wrapper {
+        flex-direction: column;
+    }
+
+    .intro-text-wrapper {
+        margin: auto;
+    }
+
+    .intro-name {
+        text-align: center;
+    }
+
+    .intro-description {
+        text-align: center;
+    }
+
+    .social-media-icons {
+        margin-left: auto;
+        margin-right: auto;
+        flex-direction: row;
+    }
+}
