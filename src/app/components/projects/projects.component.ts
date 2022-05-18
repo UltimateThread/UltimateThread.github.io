@@ -150,7 +150,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit {
     }
 
     const chatWindowHeight = innerHeight - header.offsetHeight;
-    const width = window.innerWidth;
+    const width = innerWidth;
 
     this.canvas.height = chatWindowHeight;
     this.canvas.style.height = `${chatWindowHeight}px`;
