@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import * as THREE from 'three';
+import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
 
 @Component({
   selector: 'app-about-me',
@@ -11,102 +12,95 @@ export class AboutMeComponent implements OnInit, AfterViewInit {
   private canvasRef!: ElementRef;
 
   private camera!: THREE.PerspectiveCamera;
-  private renderer!: THREE.WebGL1Renderer;
-  private scene!: THREE.Scene;
 
   private get canvas(): HTMLCanvasElement {
     return this.canvasRef.nativeElement;
   }
 
-  private group;
+  private renderer!: THREE.WebGL1Renderer;
+  private scene!: THREE.Scene;
+
+  private controls;
+  private mesh;
+  private geometry;
+  private material;
+  private clock;
+  private worldWidth = 128;
+  private worldDepth = 128;
 
   constructor() { }
 
   @HostListener('window:orientationchange ', ['$event'])
   onOrientationChange() {
-    this.calculateChatWindowHeight();
+    this.calculateContentWindowHeight();
   }
 
   ngOnInit(): void {
   }
 
   ngAfterViewInit(): void {
-    this.calculateChatWindowHeight();
+    this.calculateContentWindowHeight();
 
     this.createScene();
     this.startRenderingLoop();
   }
 
   private createScene() {
-    this.camera = new THREE.PerspectiveCamera(95, this.canvas.width / this.canvas.height, 1, 20000);
-    this.camera.position.z = 500;
+    this.camera = new THREE.PerspectiveCamera(60, this.canvas.width / this.canvas.height, 1, 20000);
+    this.camera.position.y = 200;
+
+    this.clock = new THREE.Clock();
 
     this.scene = new THREE.Scene();
+    this.scene.background = new THREE.Color(0x2e2a2a);
+    this.scene.fog = new THREE.FogExp2(0x2e2a2a, 0.0007);
 
-    let geometry = new THREE.CylinderGeometry(0, 100, 100, 3);
-    let materials = [
-      new THREE.MeshPhongMaterial({
-        // light
-        specular: '#b03b2e',
-        // intermediate
-        color: '#a31a0b',
-        // dark
-        emissive: '#7d1409',
-        shininess: 50,
-        transparent: true,
-        opacity: 0.2,
-      }),
-      new THREE.MeshPhongMaterial({
-        // light
-        specular: '#2fa4b1',
-        // intermediate
-        color: '#0b94a3',
-        // dark
-        emissive: '#0b7681',
-        shininess: 50,
-        transparent: true,
-        opacity: 0.2,
-      })];
+    this.geometry = new THREE.PlaneGeometry(20000, 20000, this.worldWidth - 1, this.worldDepth - 1);
+    this.geometry.rotateX(- Math.PI / 2);
 
-    this.group = new THREE.Object3D();
+    const position = this.geometry.attributes.position;
+    position.usage = THREE.DynamicDrawUsage;
 
-    for (var i = 0; i < 350; i++) {
-      var mesh = new THREE.Mesh(geometry, materials[Math.floor(Math.random() * materials.length)]);
-      mesh.position.x = Math.random() * 2000 - 1000;
-      mesh.position.y = Math.random() * 2000 - 1000;
-      mesh.position.z = Math.random() * 2000 - 1000;
-      mesh.rotation.x = Math.random() * 2 * Math.PI;
-      mesh.rotation.y = Math.random() * 2 * Math.PI;
-      // mesh.opacity = 50;
-      mesh.matrixAutoUpdate = false;
-      mesh.updateMatrix();
-      this.group.add(mesh);
+    for (let i = 0; i < position.count; i++) {
+
+      const y = 35 * Math.sin(i / 2);
+      position.setY(i, y);
+
     }
 
-    this.scene.add(this.group);
+    const texture = new THREE.TextureLoader().load('/assets/textures/water.jpg');
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(5, 5);
 
-    var directionalLight = new THREE.DirectionalLight(0xffffff);
-    directionalLight.position.set(1, 1, 1).normalize();
-    directionalLight.intensity = 0.2;
-    this.scene.add(directionalLight);
+    this.material = new THREE.MeshBasicMaterial({ color: 0xff0000, map: texture });
+
+    this.mesh = new THREE.Mesh(this.geometry, this.material);
+    this.scene.add(this.mesh);
 
     this.renderer = new THREE.WebGL1Renderer({ canvas: this.canvas, antialias: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);
-    this.renderer.setSize(this.canvas.width, this.canvas.height);
-    this.renderer.sortObjects = false;
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
 
-    window.addEventListener('resize', () => {
-      this.calculateChatWindowHeight();
+    this.controls = new FirstPersonControls(this.camera, this.renderer.domElement);
 
+    this.controls.movementSpeed = 500;
+    this.controls.lookSpeed = 0.1;
+
+    window.addEventListener('resize', (e) => {
+      this.calculateContentWindowHeight();
+
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
       this.camera.aspect = this.canvas.width / this.canvas.height;
       this.camera.updateProjectionMatrix();
-
+  
       this.renderer.setSize(this.canvas.width, this.canvas.height);
+  
+      this.controls.handleResize();
     });
   }
 
   private startRenderingLoop() {
-    this.calculateChatWindowHeight();
     let component: AboutMeComponent = this;
     (function render() {
       requestAnimationFrame(render);
@@ -115,21 +109,29 @@ export class AboutMeComponent implements OnInit, AfterViewInit {
   }
 
   render() {
-    this.camera.lookAt(this.scene.position);
+    const delta = this.clock.getDelta();
+    const time = this.clock.getElapsedTime() * 10;
 
-    let currentSeconds = Date.now();
-    this.group.rotation.x = Math.sin(currentSeconds * 0.0007) * 0.5;
-    this.group.rotation.y = Math.sin(currentSeconds * 0.0003) * 0.5;
-    this.group.rotation.z = Math.sin(currentSeconds * 0.0002) * 0.5;
+    const position = this.geometry.attributes.position;
 
+    for (let i = 0; i < position.count; i++) {
+
+      const y = 35 * Math.sin(i / 5 + (time + i) / 7);
+      position.setY(i, y);
+
+    }
+
+    position.needsUpdate = true;
+
+    this.controls.update(delta);
     this.renderer.render(this.scene, this.camera);
   }
 
-  calculateChatWindowHeight() {
-    const contentWrapper = document.getElementsByClassName('content-wrapper')[0] as HTMLElement;
+  calculateContentWindowHeight() {
+    const chatWindow = document.getElementsByClassName('content-wrapper')[0] as HTMLElement;
     const header = document.getElementsByClassName('header')[0] as HTMLElement;
 
-    if (contentWrapper === undefined || header === undefined) {
+    if (chatWindow === undefined || header === undefined) {
       return;
     }
 
@@ -140,7 +142,7 @@ export class AboutMeComponent implements OnInit, AfterViewInit {
     this.canvas.style.height = `${chatWindowHeight}px`;
     this.canvas.width = width;
 
-    contentWrapper.style.height = `${chatWindowHeight}px`;
-    contentWrapper.style.width = `${width}px`;
+    chatWindow.style.height = `${chatWindowHeight}px`;
+    chatWindow.style.width = `${width}px`;
   }
 }

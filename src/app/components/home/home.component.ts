@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    setTimeout(function() { window.dispatchEvent(new Event('resize')); }, 10);
+    setTimeout(function() { window.dispatchEvent(new Event('resize')); }, 1);
   }
 
   ngAfterViewInit(): void {
@@ -106,6 +106,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   private startRenderingLoop() {
     this.calculateChatWindowHeight();
+
     let component: HomeComponent = this;
     (function render() {
       requestAnimationFrame(render);
