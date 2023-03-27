@@ -27,6 +27,7 @@ export class AboutMeComponent implements OnInit, AfterViewInit {
   private clock;
   private worldWidth = 128;
   private worldDepth = 128;
+  public toPresentCalc = "";
 
   constructor() { }
 
@@ -36,6 +37,11 @@ export class AboutMeComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    var timeDiff = Math.abs(new Date().getTime() - new Date(2018, 6, 1).getTime());
+    const totalMonths = Math.round(timeDiff / (2e3 * 3600 * 365.25));
+    const months = totalMonths % 12;
+    const years = (totalMonths - months) / 12;
+    this.toPresentCalc = `${years} Years ${months} Months`;
   }
 
   ngAfterViewInit(): void {
